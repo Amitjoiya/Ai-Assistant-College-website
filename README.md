@@ -1,5 +1,5 @@
 # Ai-Assistant-College-website
 
-##My website Preview
+#--My website Preview--#
 
-![Website Front Page] (./frontpage.png)
+[Website Front Page] (./frontpage.png)
