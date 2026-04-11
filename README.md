@@ -2,4 +2,4 @@
 
 ##My website Preview
 
-![Website Front Page] (frontpage.png.png)
+![Website Front Page] (./frontpage.png)
