@@ -1,0 +1,63 @@
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <h3>🎓 Centre for Educational Technology</h3>
+      <p>CET, IIT Patna — Empowering Education through Technology. Industry demand-driven programs in Computer Science & Business Management aligned with NEP 2020.</p>
+      <p style="margin-top:8px;font-size:0.85rem;color:rgba(255,255,255,0.6)">Academic Section, Admin Block, 3rd Floor, Room No. 301<br>IIT Patna, Bihta-801106, Bihar, India</p>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <ul class="footer-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About CET</a></li>
+        <li><a href="/courses">Programs</a></li>
+        <li><a href="/admission">Admission</a></li>
+        <li><a href="https://registrations.iitp-cep.in/" target="_blank">Apply Now ↗</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Academics</h3>
+      <ul class="footer-links">
+        <li><a href="https://cet.iitp.ac.in/index.php/online-classes" target="_blank">Moodle Portal ↗</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/academics/academic-calendar" target="_blank">Academic Calendar ↗</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/academics/time-table" target="_blank">Time Table ↗</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/faculty" target="_blank">Faculty ↗</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/academics/holiday-list" target="_blank">Holiday List ↗</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Student Resources</h3>
+      <ul class="footer-links">
+        <li><a href="/fees">Fee Structure</a></li>
+        <li><a href="/career">Career Guidance</a></li>
+        <li><a href="/qa">FAQ</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/e-gymkhana" target="_blank">E-Gymkhana ↗</a></li>
+        <li><a href="https://cet.iitp.ac.in/index.php/bonafide-application" target="_blank">Bonafide ↗</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Centre for Educational Technology, IIT Patna | Student Management System | NEP 2020</p>
+  </div>
+</footer>
+
+<!-- Chatbot -->
+<button class="chatbot-toggle" onclick="toggleChatbot()" title="CET Assistant">🤖</button>
+<div class="chatbot-window" id="chatbot">
+  <div class="chatbot-header">
+    <span style="font-size:1.5rem">🤖</span>
+    <h4>CET IIT Patna Assistant</h4>
+    <button onclick="toggleChatbot()" style="margin-left:auto;background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer">&times;</button>
+  </div>
+  <div class="chatbot-messages" id="chatMessages">
+    <div class="chat-msg bot">Namaste! 🙏 I'm your CET IIT Patna Assistant. Ask me about admissions, programs, eligibility, Moodle, or campus life!</div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="chatInput" placeholder="Ask about admission, courses, fees..." onkeypress="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

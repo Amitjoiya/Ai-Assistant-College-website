@@ -1,0 +1,219 @@
+<%- include('partials/header') %>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Centre for <br><span>Educational Technology</span></h1>
+    <p>Empowering Education through Technology @ IIT Patna — Industry demand-driven programs in Computer Science & Business Management aligned with NEP 2020.</p>
+    <div class="hero-buttons">
+      <a href="/admission" class="btn btn-primary">🎓 Admission Open — Autumn 2026</a>
+      <a href="/courses" class="btn btn-outline">📚 Explore Programs</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-content">
+    <% if(announcements && announcements.length > 0) { %>
+      <% announcements.forEach(a => { %>
+        <span>📢 <%= a.title %></span>
+      <% }) %>
+    <% } else { %>
+      <span>📢 Admission Open For Autumn 2026 Session</span>
+      <span>📢 Academic Calendar for Autumn 2026 — NEW</span>
+      <span>📢 End Semester Examination Schedule (Spring 2026) Released</span>
+    <% } %>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat-card animate-on-scroll">
+    <div class="stat-number" data-target="<%= studentCount > 0 ? studentCount : 500 %>">0</div>
+    <div class="stat-label">Students Enrolled</div>
+  </div>
+  <div class="stat-card animate-on-scroll">
+    <div class="stat-number" data-target="50">0</div>
+    <div class="stat-label">IIT Patna Faculty</div>
+  </div>
+  <div class="stat-card animate-on-scroll">
+    <div class="stat-number" data-target="4">0</div>
+    <div class="stat-label">NEP Programs</div>
+  </div>
+  <div class="stat-card animate-on-scroll">
+    <div class="stat-number" data-target="2023">0</div>
+    <div class="stat-label">Established Since</div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="section section-light">
+  <div class="section-title animate-on-scroll">
+    <h2>📘 About CET, IIT Patna</h2>
+    <p>Transforming education through innovative pedagogy under NEP 2020</p>
+    <div class="line"></div>
+  </div>
+  <div style="max-width:800px;margin:auto;text-align:center" class="animate-on-scroll">
+    <p style="font-size:1.05rem;line-height:1.8;color:var(--text-light)">
+      IIT Patna Senate adopted the NEP-2020 and started implementing it in letter and spirit. CET is a center equipped with technology enabled platform for imparting education at affordable cost with innovative pedagogy. The curriculum is at par with globally accepted credit framework with focus on <strong>"hands-on training"</strong> and <strong>"transformative pedagogy"</strong> envisioned in NEP-2020. Program structure is flexible, modular, and suitable for both regular students and working professionals.
+    </p>
+    <a href="/about" class="btn btn-primary" style="margin-top:24px">Learn More →</a>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="section">
+  <div class="section-title animate-on-scroll">
+    <h2>🎓 Our Programs</h2>
+    <p>Industry demand-driven programs aligned with NEP 2020</p>
+    <div class="line"></div>
+  </div>
+  <div class="card-grid">
+    <div class="course-card animate-on-scroll">
+      <div class="course-icon">💻</div>
+      <h3>B.Sc (Hons.) CSDA</h3>
+      <p class="duration">3 Years | Modular</p>
+      <p>Computer Science & Data Analytics with AI/ML specialization.</p>
+      <p style="font-size:0.8rem;color:var(--secondary);margin-top:8px">10+2 Science | Min 60% | JEE/CUET/IITP-SAT</p>
+      <a href="/courses" class="btn btn-primary" style="margin-top:12px;padding:8px 20px;font-size:0.85rem">Details →</a>
+    </div>
+    <div class="course-card animate-on-scroll">
+      <div class="course-icon">🛡️</div>
+      <h3>4-Year BS AICS</h3>
+      <p class="duration">4 Years | Modular</p>
+      <p>Artificial Intelligence & Cyber Security program.</p>
+      <p style="font-size:0.8rem;color:var(--secondary);margin-top:8px">10+2 Science | Min 60% | JEE/CUET/IITP-SAT</p>
+      <a href="/courses" class="btn btn-primary" style="margin-top:12px;padding:8px 20px;font-size:0.85rem">Details →</a>
+    </div>
+    <div class="course-card animate-on-scroll">
+      <div class="course-icon">📊</div>
+      <h3>4-Year BS CSDA</h3>
+      <p class="duration">4 Years | Modular</p>
+      <p>Extended Computer Science & Data Analytics program.</p>
+      <p style="font-size:0.8rem;color:var(--secondary);margin-top:8px">10+2 Science | Min 60% | JEE/CUET/IITP-SAT</p>
+      <a href="/courses" class="btn btn-primary" style="margin-top:12px;padding:8px 20px;font-size:0.85rem">Details →</a>
+    </div>
+    <div class="course-card animate-on-scroll">
+      <div class="course-icon">💼</div>
+      <h3>BBA</h3>
+      <p class="duration">3 Years | Modular</p>
+      <p>Bachelor in Business Administration with industry exposure.</p>
+      <p style="font-size:0.8rem;color:var(--secondary);margin-top:8px">10+2 Any Stream | Min 60% | JEE/CUET/IITP-SAT</p>
+      <a href="/courses" class="btn btn-primary" style="margin-top:12px;padding:8px 20px;font-size:0.85rem">Details →</a>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK LINKS -->
+<section class="section section-light">
+  <div class="section-title animate-on-scroll">
+    <h2>🔗 Important Links for Students</h2>
+    <p>Quick access to academic resources & portals</p>
+    <div class="line"></div>
+  </div>
+  <div class="card-grid" style="max-width:1100px;margin:auto">
+    <a href="https://cet.iitp.ac.in/index.php/online-classes" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">📚</div>
+      <h3>Moodle Portal</h3>
+      <p>Online Classes & Learning Management System</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/academics/academic-calendar" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">📅</div>
+      <h3>Academic Calendar</h3>
+      <p>Session dates, exam schedules & events</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/academics/time-table" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">🕐</div>
+      <h3>Time Table</h3>
+      <p>Class schedules & lecture timings</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/academics/holiday-list" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">🏖️</div>
+      <h3>Holiday List</h3>
+      <p>Institute holidays & vacation schedule</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/academics/end-semester-examination-schedule-spring-2026-session" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">📝</div>
+      <h3>Exam Schedule</h3>
+      <p>End Semester Examination Schedule (Spring 2026)</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/e-gymkhana" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">🏅</div>
+      <h3>E-Gymkhana</h3>
+      <p>Student activities, clubs & sports</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/bonafide-application" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">📄</div>
+      <h3>Bonafide Application</h3>
+      <p>Apply for bonafide certificate online</p>
+    </a>
+    <a href="https://cet.iitp.ac.in/index.php/announcements/technology-club-internship-placement-cell" target="_blank" class="course-card animate-on-scroll" style="text-decoration:none;text-align:center;cursor:pointer">
+      <div style="font-size:2.5rem;margin-bottom:8px">💼</div>
+      <h3>Placement Cell</h3>
+      <p>Technology Club & Internship opportunities</p>
+    </a>
+  </div>
+</section>
+
+<!-- CAMPUS -->
+<section class="section">
+  <div class="section-title animate-on-scroll">
+    <h2>🏛️ IIT Patna Campus</h2>
+    <p>World-class infrastructure at Bihta, Bihar</p>
+    <div class="line"></div>
+  </div>
+  <div class="card-grid">
+    <div class="card animate-on-scroll">
+      <img src="/images/campus.jpg" alt="IIT Patna Campus">
+      <div class="card-body"><h3>Green Campus</h3><p>IIT Patna campus at Bihta spread across acres of lush green environment with modern infrastructure.</p></div>
+    </div>
+    <div class="card animate-on-scroll">
+      <img src="/images/student.jpg" alt="Student Community">
+      <div class="card-body"><h3>Vibrant Community</h3><p>A diverse student community fostering collaboration, innovation and lifelong friendships.</p></div>
+    </div>
+    <div class="card animate-on-scroll">
+      <img src="/images/education.jpg" alt="Quality Education">
+      <div class="card-body"><h3>IIT Quality Education</h3><p>Curriculum designed by IIT Patna professors with industry experts ensuring the best learning outcomes.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-light">
+  <div class="section-title animate-on-scroll">
+    <h2>📞 Contact CET</h2>
+    <p>Get in touch with Centre for Educational Technology</p>
+    <div class="line"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-info animate-on-scroll">
+      <h3>Centre for Educational Technology</h3>
+      <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Academic Section, Admin Block, 3rd Floor, Room No. 301</span></div>
+      <div class="contact-item"><i class="fas fa-university"></i><span>IIT Patna, Bihta-801106, Bihar, India</span></div>
+      <div class="contact-item"><i class="fas fa-clock"></i><span>Mon - Fri: 9:00 AM - 5:00 PM</span></div>
+      <div style="margin-top:16px">
+        <a href="https://registrations.iitp-cep.in/" target="_blank" class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem">Official Registration Portal →</a>
+      </div>
+    </div>
+    <div class="form-container animate-on-scroll" style="box-shadow:none">
+      <form id="contactForm" onsubmit="submitContact(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" class="form-control" name="name" required placeholder="Enter your name">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" name="email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea class="form-control" name="message" required placeholder="Write your message..."></textarea>
+        </div>
+        <button type="submit" class="form-btn">Send Message <i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

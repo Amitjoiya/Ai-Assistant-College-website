@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<section class="hero" style="height:50vh">
+  <div class="hero-content">
+    <h1>Student <span>FAQ</span></h1>
+    <p>Find answers to commonly asked questions</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-title animate-on-scroll"><h2>❓ Frequently Asked Questions</h2><div class="line"></div></div>
+  <div style="max-width:800px;margin:auto">
+    <% const faqs = [
+      {q:'What facilities are provided in the hostel?',a:'The hostel provides bed, study table, chair, WiFi, electricity, water supply, and 24/7 security.'},
+      {q:'What items should students bring for hostel stay?',a:'Students should bring clothes, bedsheets, toiletries, and other personal daily-use items.'},
+      {q:'Is WiFi available in the hostel and campus?',a:'Yes, high-speed WiFi is available in both hostel and academic areas.'},
+      {q:'What is the hostel timing and curfew rules?',a:'Students must follow hostel timings, and entry is restricted after curfew time set by management.'},
+      {q:'How is the food quality in hostel mess?',a:'The hostel provides hygienic and nutritious meals with a fixed weekly menu.'},
+      {q:'When should semester fees be paid?',a:'Semester fees must be paid before the start or as per schedule provided by the college.'},
+      {q:'Are there any late fees or penalties?',a:'Yes, late payment of fees may result in penalties as per college rules.'},
+      {q:'What are the library working hours?',a:'The library is generally open from 9 AM to 7 PM on working days.'},
+      {q:'How can students borrow books?',a:'Students can borrow books using their library ID card for a limited duration.'},
+      {q:'Are digital library resources available?',a:'Yes, students can access e-books, journals, and online study materials.'},
+      {q:'What placement opportunities are available?',a:'The college provides placement support with various companies visiting every year.'},
+      {q:'Which companies visit for placements?',a:'Top companies from IT, Finance, and other industries visit campus depending on the course.'},
+      {q:'What is the average placement package?',a:'The average package ranges from 3 LPA to 8 LPA depending on the course.'},
+      {q:'Are internships provided during the course?',a:'Yes, internships are provided to help students gain real-world experience.'},
+      {q:'Is attendance compulsory?',a:'Yes, students must maintain minimum 75% attendance as per university rules.'},
+      {q:'Are scholarships available?',a:'Yes, scholarships are available based on merit and financial background.'},
+      {q:'What documents are required for admission?',a:'Mark sheets, ID proof, passport-size photos, category certificate, and other required documents.'},
+      {q:'Is there any transportation facility?',a:'Yes, bus facilities are available for students from nearby areas.'}
+    ] %>
+    <% faqs.forEach((f, i) => { %>
+    <div class="faq-item animate-on-scroll">
+      <button class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+        <span><%= f.q %></span>
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer"><p><%= f.a %></p></div>
+    </div>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section section-light" style="text-align:center">
+  <h2 style="color:var(--primary);margin-bottom:12px">Still Have Questions?</h2>
+  <p style="color:var(--text-light);margin-bottom:24px">Contact our support team for personalized assistance</p>
+  <a href="/#contact" class="btn btn-primary">Contact Support <i class="fas fa-headset"></i></a>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,178 @@
+<%- include('partials/header') %>
+
+<div class="dashboard">
+  <div class="dash-header">
+    <div>
+      <h1>📊 Admin Dashboard</h1>
+      <p style="color:var(--text-light)">Welcome, <strong><%= user.username %></strong></p>
+    </div>
+    <a href="/api/auth/logout" class="btn btn-primary" style="padding:10px 24px;font-size:0.9rem"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="dash-stats">
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon blue"><i class="fas fa-user-graduate"></i></div>
+      <div class="dash-stat-info"><h3><%= stats.totalStudents %></h3><p>Total Students</p></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon orange"><i class="fas fa-file-alt"></i></div>
+      <div class="dash-stat-info"><h3><%= stats.totalAdmissions %></h3><p>Total Applications</p></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon green"><i class="fas fa-clock"></i></div>
+      <div class="dash-stat-info"><h3><%= stats.pendingAdmissions %></h3><p>Pending Approvals</p></div>
+    </div>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon purple"><i class="fas fa-envelope"></i></div>
+      <div class="dash-stat-info"><h3><%= stats.totalMessages %></h3><p>Contact Messages</p></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="showTab('students')">👨‍🎓 Students</button>
+    <button class="dash-tab" onclick="showTab('admissions')">📝 Admissions</button>
+    <button class="dash-tab" onclick="showTab('messages')">📧 Messages</button>
+  </div>
+
+  <!-- Students Section -->
+  <div class="dash-section" id="tab-students">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="margin:0;border:none;padding:0">Student Records</h2>
+      <button class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem" onclick="document.getElementById('addStudentModal').classList.add('show')">
+        <i class="fas fa-plus"></i> Add Student
+      </button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Course</th><th>Semester</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% if(students.length === 0) { %>
+            <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light)">No students found. Click "Add Student" to add one.</td></tr>
+          <% } %>
+          <% students.forEach(s => { %>
+          <tr>
+            <td><strong><%= s.rollNo %></strong></td>
+            <td><%= s.name %></td>
+            <td><%= s.email %></td>
+            <td><%= s.course %></td>
+            <td><%= s.semester %></td>
+            <td><span class="badge badge-<%= s.status==='Active'?'active':'pending' %>"><%= s.status %></span></td>
+            <td>
+              <button class="action-btn edit" onclick="editStudent('<%= s._id %>','<%= s.name %>','<%= s.email %>','<%= s.phone %>','<%= s.rollNo %>','<%= s.course %>',<%= s.semester %>,'<%= s.status %>')"><i class="fas fa-edit"></i></button>
+              <button class="action-btn delete" onclick="deleteStudent('<%= s._id %>')"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Admissions Section -->
+  <div class="dash-section" id="tab-admissions" style="display:none">
+    <h2>Admission Applications</h2>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <% if(admissions.length === 0) { %>
+            <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light)">No applications yet.</td></tr>
+          <% } %>
+          <% admissions.forEach(a => { %>
+          <tr>
+            <td><%= a.fullName %></td>
+            <td><%= a.email %></td>
+            <td><%= a.phone %></td>
+            <td><%= a.course %></td>
+            <td><%= a.city %></td>
+            <td><span class="badge badge-<%= a.status==='Pending'?'pending':a.status==='Approved'?'approved':'rejected' %>"><%= a.status %></span></td>
+            <td>
+              <button class="action-btn view" onclick="updateAdmission('<%= a._id %>','Approved')"><i class="fas fa-check"></i></button>
+              <button class="action-btn delete" onclick="updateAdmission('<%= a._id %>','Rejected')"><i class="fas fa-times"></i></button>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Messages Section -->
+  <div class="dash-section" id="tab-messages" style="display:none">
+    <h2>Contact Messages</h2>
+    <% if(contacts.length === 0) { %>
+      <p style="text-align:center;padding:30px;color:var(--text-light)">No messages yet.</p>
+    <% } %>
+    <% contacts.forEach(c => { %>
+    <div style="background:#f8f9fc;border-radius:12px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between"><strong><%= c.name %></strong><span style="color:var(--text-light);font-size:0.8rem"><%= new Date(c.createdAt).toLocaleDateString() %></span></div>
+      <p style="color:var(--text-light);font-size:0.85rem;margin-top:4px"><%= c.email %></p>
+      <p style="margin-top:8px"><%= c.message %></p>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-overlay" id="addStudentModal">
+  <div class="modal">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
+    <h2>Add New Student</h2>
+    <form id="addStudentForm" onsubmit="addStudent(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" class="form-control" name="name" required></div>
+        <div class="form-group"><label>Roll No *</label><input type="text" class="form-control" name="rollNo" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email *</label><input type="email" class="form-control" name="email" required></div>
+        <div class="form-group"><label>Phone *</label><input type="tel" class="form-control" name="phone" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Course *</label>
+          <select class="form-control" name="course" required>
+            <option value="">Select</option><option>B.Sc (Hons.) CSDA</option><option>BS AI & Cyber Security</option><option>BS CSDA (4-Year)</option><option>BBA</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Semester</label><input type="number" class="form-control" name="semester" value="1" min="1" max="8"></div>
+      </div>
+      <button type="submit" class="form-btn">Add Student</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div class="modal-overlay" id="editStudentModal">
+  <div class="modal">
+    <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
+    <h2>Edit Student</h2>
+    <form id="editStudentForm" onsubmit="updateStudent(event)">
+      <input type="hidden" name="id" id="edit-id">
+      <div class="form-row">
+        <div class="form-group"><label>Name</label><input type="text" class="form-control" name="name" id="edit-name" required></div>
+        <div class="form-group"><label>Roll No</label><input type="text" class="form-control" name="rollNo" id="edit-rollNo" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email" id="edit-email" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" class="form-control" name="phone" id="edit-phone" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Course</label>
+          <select class="form-control" name="course" id="edit-course">
+            <option>B.Sc (Hons.) CSDA</option><option>BS AI & Cyber Security</option><option>BS CSDA (4-Year)</option><option>BBA</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Semester</label><input type="number" class="form-control" name="semester" id="edit-semester" min="1" max="8"></div>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select class="form-control" name="status" id="edit-status">
+          <option>Active</option><option>Inactive</option><option>Graduated</option><option>Suspended</option>
+        </select>
+      </div>
+      <button type="submit" class="form-btn">Update Student</button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

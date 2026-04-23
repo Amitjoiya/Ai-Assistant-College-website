@@ -1,0 +1,33 @@
+{
+  "name": "ai-assistant-college-website",
+  "version": "1.0.0",
+  "description": "[Website Front Page](frontpage.png)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amitjoiya/Ai-Assistant-College-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Amitjoiya/Ai-Assistant-College-website/issues"
+  },
+  "homepage": "https://github.com/Amitjoiya/Ai-Assistant-College-website#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "jsonwebtoken": "^9.0.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.5.0"
+  }
+}

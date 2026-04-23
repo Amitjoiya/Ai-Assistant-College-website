@@ -1,0 +1,26 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <h1>📝 Register</h1>
+    <p class="subtitle">Create an admin account</p>
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control" name="username" required placeholder="Choose username">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-control" name="email" required placeholder="Enter email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" name="password" required placeholder="Create password" minlength="6">
+      </div>
+      <button type="submit" class="form-btn" style="margin-top:16px">Register <i class="fas fa-user-plus"></i></button>
+    </form>
+    <p style="margin-top:20px;color:var(--text-light);font-size:0.9rem">
+      Already have an account? <a href="/login" style="color:var(--secondary);font-weight:600">Login here</a>
+    </p>
+    <a href="/" style="display:inline-block;margin-top:12px;color:var(--text-light);font-size:0.85rem">← Back to Home</a>
+  </div>
+</div>
+<script src="/js/main.js"></script>
