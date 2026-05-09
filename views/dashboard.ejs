@@ -1,125 +1,173 @@
 <%- include('partials/header') %>
+<link rel="stylesheet" href="/css/admin.css">
 
-<div class="dashboard">
-  <div class="dash-header">
-    <div>
-      <h1>📊 Admin Dashboard</h1>
-      <p style="color:var(--text-light)">Welcome, <strong><%= user.username %></strong></p>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-avatar"><%= user.username.charAt(0).toUpperCase() %></div>
+      <div class="sidebar-user">
+        <h4><%= user.username %></h4>
+        <span class="sidebar-role">Administrator</span>
+      </div>
     </div>
-    <a href="/api/auth/logout" class="btn btn-primary" style="padding:10px 24px;font-size:0.9rem"><i class="fas fa-sign-out-alt"></i> Logout</a>
-  </div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-link active" onclick="showTab('overview',this)"><i class="fas fa-th-large"></i> Overview</button>
+      <button class="sidebar-link" onclick="showTab('students',this)"><i class="fas fa-user-graduate"></i> Students</button>
+      <button class="sidebar-link" onclick="showTab('admissions',this)"><i class="fas fa-file-alt"></i> Applications</button>
+      <button class="sidebar-link" onclick="showTab('messages',this)"><i class="fas fa-envelope"></i> Messages</button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/api/auth/logout" class="sidebar-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </aside>
 
-  <!-- Stats -->
-  <div class="dash-stats">
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon blue"><i class="fas fa-user-graduate"></i></div>
-      <div class="dash-stat-info"><h3><%= stats.totalStudents %></h3><p>Total Students</p></div>
-    </div>
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon orange"><i class="fas fa-file-alt"></i></div>
-      <div class="dash-stat-info"><h3><%= stats.totalAdmissions %></h3><p>Total Applications</p></div>
-    </div>
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon green"><i class="fas fa-clock"></i></div>
-      <div class="dash-stat-info"><h3><%= stats.pendingAdmissions %></h3><p>Pending Approvals</p></div>
-    </div>
-    <div class="dash-stat-card">
-      <div class="dash-stat-icon purple"><i class="fas fa-envelope"></i></div>
-      <div class="dash-stat-info"><h3><%= stats.totalMessages %></h3><p>Contact Messages</p></div>
-    </div>
-  </div>
-
-  <!-- Tabs -->
-  <div class="dash-tabs">
-    <button class="dash-tab active" onclick="showTab('students')">👨‍🎓 Students</button>
-    <button class="dash-tab" onclick="showTab('admissions')">📝 Admissions</button>
-    <button class="dash-tab" onclick="showTab('messages')">📧 Messages</button>
-  </div>
-
-  <!-- Students Section -->
-  <div class="dash-section" id="tab-students">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <h2 style="margin:0;border:none;padding:0">Student Records</h2>
-      <button class="btn btn-primary" style="padding:10px 20px;font-size:0.85rem" onclick="document.getElementById('addStudentModal').classList.add('show')">
-        <i class="fas fa-plus"></i> Add Student
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+        <i class="fas fa-bars"></i>
       </button>
+      <h1 class="topbar-title">Admin Dashboard</h1>
+      <div class="topbar-right">
+        <span class="topbar-date"><i class="fas fa-calendar-alt"></i> <%= new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) %></span>
+      </div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="data-table">
-        <thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Course</th><th>Semester</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>
-          <% if(students.length === 0) { %>
-            <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light)">No students found. Click "Add Student" to add one.</td></tr>
-          <% } %>
-          <% students.forEach(s => { %>
-          <tr>
-            <td><strong><%= s.rollNo %></strong></td>
-            <td><%= s.name %></td>
-            <td><%= s.email %></td>
-            <td><%= s.course %></td>
-            <td><%= s.semester %></td>
-            <td><span class="badge badge-<%= s.status==='Active'?'active':'pending' %>"><%= s.status %></span></td>
-            <td>
-              <button class="action-btn edit" onclick="editStudent('<%= s._id %>','<%= s.name %>','<%= s.email %>','<%= s.phone %>','<%= s.rollNo %>','<%= s.course %>',<%= s.semester %>,'<%= s.status %>')"><i class="fas fa-edit"></i></button>
-              <button class="action-btn delete" onclick="deleteStudent('<%= s._id %>')"><i class="fas fa-trash"></i></button>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- Admissions Section -->
-  <div class="dash-section" id="tab-admissions" style="display:none">
-    <h2>Admission Applications</h2>
-    <div style="overflow-x:auto">
-      <table class="data-table">
-        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>
-          <% if(admissions.length === 0) { %>
-            <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-light)">No applications yet.</td></tr>
-          <% } %>
-          <% admissions.forEach(a => { %>
-          <tr>
-            <td><%= a.fullName %></td>
-            <td><%= a.email %></td>
-            <td><%= a.phone %></td>
-            <td><%= a.course %></td>
-            <td><%= a.city %></td>
-            <td><span class="badge badge-<%= a.status==='Pending'?'pending':a.status==='Approved'?'approved':'rejected' %>"><%= a.status %></span></td>
-            <td>
-              <button class="action-btn view" onclick="updateAdmission('<%= a._id %>','Approved')"><i class="fas fa-check"></i></button>
-              <button class="action-btn delete" onclick="updateAdmission('<%= a._id %>','Rejected')"><i class="fas fa-times"></i></button>
-            </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  </div>
+    <!-- Overview Tab -->
+    <div class="tab-content" id="tab-overview">
+      <div class="stats-grid">
+        <div class="stat-box stat-blue">
+          <div class="stat-box-icon"><i class="fas fa-user-graduate"></i></div>
+          <div class="stat-box-data"><h2><%= stats.totalStudents %></h2><p>Total Students</p></div>
+        </div>
+        <div class="stat-box stat-orange">
+          <div class="stat-box-icon"><i class="fas fa-file-alt"></i></div>
+          <div class="stat-box-data"><h2><%= stats.totalAdmissions %></h2><p>Applications</p></div>
+        </div>
+        <div class="stat-box stat-yellow">
+          <div class="stat-box-icon"><i class="fas fa-clock"></i></div>
+          <div class="stat-box-data"><h2><%= stats.pendingAdmissions %></h2><p>Pending</p></div>
+        </div>
+        <div class="stat-box stat-purple">
+          <div class="stat-box-icon"><i class="fas fa-envelope"></i></div>
+          <div class="stat-box-data"><h2><%= stats.totalMessages %></h2><p>Messages</p></div>
+        </div>
+      </div>
 
-  <!-- Messages Section -->
-  <div class="dash-section" id="tab-messages" style="display:none">
-    <h2>Contact Messages</h2>
-    <% if(contacts.length === 0) { %>
-      <p style="text-align:center;padding:30px;color:var(--text-light)">No messages yet.</p>
-    <% } %>
-    <% contacts.forEach(c => { %>
-    <div style="background:#f8f9fc;border-radius:12px;padding:16px;margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between"><strong><%= c.name %></strong><span style="color:var(--text-light);font-size:0.8rem"><%= new Date(c.createdAt).toLocaleDateString() %></span></div>
-      <p style="color:var(--text-light);font-size:0.85rem;margin-top:4px"><%= c.email %></p>
-      <p style="margin-top:8px"><%= c.message %></p>
+      <div class="quick-grid">
+        <div class="quick-card">
+          <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+          <div class="quick-actions">
+            <button class="qa-btn" onclick="document.getElementById('addStudentModal').classList.add('show')"><i class="fas fa-plus"></i> Add Student</button>
+            <button class="qa-btn" onclick="showTab('admissions',document.querySelectorAll('.sidebar-link')[2])"><i class="fas fa-list"></i> View Applications</button>
+            <button class="qa-btn" onclick="showTab('messages',document.querySelectorAll('.sidebar-link')[3])"><i class="fas fa-envelope-open"></i> Read Messages</button>
+          </div>
+        </div>
+        <div class="quick-card">
+          <h3><i class="fas fa-chart-pie"></i> Status Summary</h3>
+          <div class="summary-list">
+            <div class="summary-item"><span>Active Students</span><span class="badge badge-active"><%= students.filter(s=>s.status==='Active').length %></span></div>
+            <div class="summary-item"><span>Approved Apps</span><span class="badge badge-approved"><%= admissions.filter(a=>a.status==='Approved').length %></span></div>
+            <div class="summary-item"><span>Pending Apps</span><span class="badge badge-pending"><%= admissions.filter(a=>a.status==='Pending').length %></span></div>
+            <div class="summary-item"><span>Rejected Apps</span><span class="badge badge-rejected"><%= admissions.filter(a=>a.status==='Rejected').length %></span></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <% }) %>
-  </div>
+
+    <!-- Students Tab -->
+    <div class="tab-content" id="tab-students" style="display:none">
+      <div class="section-header">
+        <h2>Student Records</h2>
+        <button class="add-btn" onclick="document.getElementById('addStudentModal').classList.add('show')"><i class="fas fa-plus"></i> Add Student</button>
+      </div>
+      <div class="table-card">
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr><th>Roll No</th><th>Name</th><th>Email</th><th>Course</th><th>Sem</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <% if(students.length===0) { %>
+                <tr><td colspan="7" class="empty-cell"><i class="fas fa-inbox"></i><br>No students yet. Click "Add Student" to begin.</td></tr>
+              <% } %>
+              <% students.forEach(s => { %>
+              <tr>
+                <td><strong><%= s.rollNo %></strong></td>
+                <td><%= s.name %></td>
+                <td><%= s.email %></td>
+                <td><%= s.course %></td>
+                <td><%= s.semester %></td>
+                <td><span class="badge badge-<%= s.status==='Active'?'active':'pending' %>"><%= s.status %></span></td>
+                <td class="action-cell">
+                  <button class="act-btn act-edit" onclick="editStudent('<%= s._id %>','<%= s.name %>','<%= s.email %>','<%= s.phone %>','<%= s.rollNo %>','<%= s.course %>',<%= s.semester %>,'<%= s.status %>')"><i class="fas fa-edit"></i></button>
+                  <button class="act-btn act-del" onclick="deleteStudent('<%= s._id %>')"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admissions Tab -->
+    <div class="tab-content" id="tab-admissions" style="display:none">
+      <div class="section-header"><h2>Admission Applications</h2></div>
+      <div class="table-card">
+        <div style="overflow-x:auto">
+          <table class="admin-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Course</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <% if(admissions.length===0) { %>
+                <tr><td colspan="7" class="empty-cell"><i class="fas fa-inbox"></i><br>No applications yet.</td></tr>
+              <% } %>
+              <% admissions.forEach(a => { %>
+              <tr>
+                <td><%= a.fullName %></td>
+                <td><%= a.email %></td>
+                <td><%= a.phone %></td>
+                <td><%= a.course %></td>
+                <td><%= a.city %></td>
+                <td><span class="badge badge-<%= a.status==='Pending'?'pending':a.status==='Approved'?'approved':'rejected' %>"><%= a.status %></span></td>
+                <td class="action-cell">
+                  <button class="act-btn act-approve" onclick="updateAdmission('<%= a._id %>','Approved')"><i class="fas fa-check"></i></button>
+                  <button class="act-btn act-del" onclick="updateAdmission('<%= a._id %>','Rejected')"><i class="fas fa-times"></i></button>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Tab -->
+    <div class="tab-content" id="tab-messages" style="display:none">
+      <div class="section-header"><h2>Contact Messages</h2></div>
+      <% if(contacts.length===0) { %>
+        <div class="empty-state"><i class="fas fa-envelope-open-text"></i><p>No messages yet.</p></div>
+      <% } %>
+      <div class="messages-grid">
+        <% contacts.forEach(c => { %>
+        <div class="msg-card">
+          <div class="msg-top">
+            <div class="msg-avatar"><%= c.name.charAt(0).toUpperCase() %></div>
+            <div><strong><%= c.name %></strong><p class="msg-email"><%= c.email %></p></div>
+            <span class="msg-date"><%= new Date(c.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) %></span>
+          </div>
+          <p class="msg-body"><%= c.message %></p>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </main>
 </div>
 
 <!-- Add Student Modal -->
 <div class="modal-overlay" id="addStudentModal">
   <div class="modal">
     <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
-    <h2>Add New Student</h2>
+    <h2><i class="fas fa-user-plus" style="color:var(--secondary)"></i> Add New Student</h2>
     <form id="addStudentForm" onsubmit="addStudent(event)">
       <div class="form-row">
         <div class="form-group"><label>Name *</label><input type="text" class="form-control" name="name" required></div>
@@ -146,7 +194,7 @@
 <div class="modal-overlay" id="editStudentModal">
   <div class="modal">
     <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
-    <h2>Edit Student</h2>
+    <h2><i class="fas fa-edit" style="color:var(--secondary)"></i> Edit Student</h2>
     <form id="editStudentForm" onsubmit="updateStudent(event)">
       <input type="hidden" name="id" id="edit-id">
       <div class="form-row">
@@ -174,5 +222,16 @@
     </form>
   </div>
 </div>
+
+<script>
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.querySelectorAll('.sidebar-link').forEach(t => t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+}
+</script>
 
 <%- include('partials/footer') %>

@@ -99,11 +99,15 @@ async function handleRegister(e) {
 }
 
 // ===== DASHBOARD FUNCTIONS =====
-function showTab(tab) {
-  document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
-  document.getElementById('tab-' + tab).style.display = 'block';
-  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content, [id^="tab-"]').forEach(el => el.style.display = 'none');
+  const target = document.getElementById('tab-' + tab);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.dash-tab, .sidebar-link').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // Close sidebar on mobile
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.classList.remove('open');
 }
 
 async function addStudent(e) {
@@ -167,42 +171,118 @@ async function updateAdmission(id, status) {
   } catch (err) { showToast('Failed to update', 'error'); }
 }
 
-// ===== CHATBOT with real CET data =====
+// ===== SMART CHATBOT with CET data =====
 function toggleChatbot() {
   document.getElementById('chatbot').classList.toggle('open');
 }
 
-const chatResponses = {
-  'admission': '🎓 Admissions are open for Autumn 2026 session! Eligibility: 10+2 with Min 60%. You need JEE/CUET/BITSAT score OR take IITP-SAT entrance test. Apply at registrations.iitp-cep.in',
-  'eligibility': '📋 For CSDA/AICS: 10+2 Science with Min 60% + JEE/NEET/CUET/BITSAT/SAT score or IITP-SAT. For BBA: 10+2 any stream with Min 60% + same entrance options.',
-  'fee': '💰 For detailed fee structure and academic service charges, visit the official CET page or check /fees on our website.',
-  'course': '📚 CET offers: B.Sc (Hons.) CSDA (3yr), 4-Year BS AI & Cyber Security, 4-Year BS CSDA, and BBA (3yr). All are NEP 2020 modular programs.',
-  'csda': '💻 B.Sc (Hons.) Computer Science & Data Analytics — 3 year modular program with AI/ML specialization. Entry/exit/re-entry at certificate, diploma, degree levels.',
-  'aics': '🛡️ 4-Year BS in AI & Cyber Security — Covers AI, ML, Cyber Security, Ethical Hacking. Download brochure: cet.iitp.ac.in/images/pdf/AICS.pdf',
-  'bba': '💼 Bachelor in Business Administration — 3 year modular program with Marketing, Finance, HR, Entrepreneurship. 10+2 any stream with 60% required.',
-  'moodle': '📖 Moodle is the online learning portal for CET students. Access at: cet.iitp.ac.in → Moodle link. Used for classes, assignments, and resources.',
-  'timetable': '🕐 Check your class timetable at: cet.iitp.ac.in → Academics → Time Table',
-  'time table': '🕐 Check your class timetable at: cet.iitp.ac.in → Academics → Time Table',
-  'calendar': '📅 Academic Calendar for Autumn 2026 is available at cet.iitp.ac.in → Academics → Academic Calendar',
-  'exam': '📝 End Semester Examination Schedule (Spring 2026) is available at cet.iitp.ac.in → Academics. Evaluation: 20% Quiz + 30% Assignment + 50% End Sem.',
-  'evaluation': '📝 Evaluation: 20% Class Test & Quiz + 30% Regular Assignments + 50% End Semester Exam (Proctored). ≥75% = Degree with Distinction!',
-  'holiday': '🏖️ Holiday list available at cet.iitp.ac.in → Academics → Holiday List. Institute follows IIT Patna holiday calendar.',
-  'faculty': '👨‍🏫 CET has IIT Patna professors + guest faculty from KPMG, EY, Toronto Metropolitan University, Wayne State University, Kings College London, Nalanda University.',
-  'hostel': '🏠 Hostel provides bed, study table, WiFi, 24/7 security. Mess provides hygienic nutritious meals.',
-  'placement': '💼 CET has a Technology Club & Internship-Placement Cell. Check: cet.iitp.ac.in → Announcements → Placement Cell.',
-  'bonafide': '📄 Apply for bonafide certificate at: cet.iitp.ac.in → Bonafide Application',
-  'gymkhana': '🏅 E-Gymkhana handles student activities, clubs & sports. Visit: cet.iitp.ac.in → E-Gymkhana',
-  'nep': '📘 All programs follow NEP 2020 with modular structure: Year 1 = Certificate, Year 2 = Diploma, Year 3 = Degree, Year 4 = BS Research.',
-  'iit': '🏛️ CET is part of IIT Patna, located at Bihta-801106, Bihar. Programs are designed by IIT Patna Senate faculty.',
-  'contact': '📞 CET Office: Academic Section, Admin Block, 3rd Floor, Room 301, IIT Patna, Bihta-801106, Bihar, India.',
-  'hello': 'Namaste! 👋 I am your CET IIT Patna assistant. Ask me about admissions, programs, eligibility, Moodle, timetable, or campus life!',
-  'hi': 'Hi! 😊 Welcome to CET IIT Patna. I can help with admissions, courses (CSDA/AICS/BBA), fees, faculty, Moodle, or placements!',
-  'jee': '🎯 JEE (Main/Advanced) score holders are eligible for CSDA and AICS programs. You can also use CUET, BITSAT, SAT, or IITP-SAT.',
-  'cuet': '🎯 CUET score is accepted for admission to all CET programs — CSDA, AICS, and BBA.',
-  'sat': '🌍 International students with SAT-I/SAT-II (US) or BMAT (UK) scores are eligible for CET programs.',
-  'register': '📝 Official registration portal: registrations.iitp-cep.in — Apply for Autumn 2026 admission.',
-  'apply': '📝 Apply at the official registration portal: registrations.iitp-cep.in. For queries, fill our admission enquiry form at /admission.'
-};
+// Knowledge base with multi-keyword matching and categories
+const chatKB = [
+  {
+    keywords: ['hello','hi','hey','hii','hiii','namaste','namaskar','hlo','hlw','good morning','good evening','good afternoon','kaise ho','kya hal'],
+    reply: 'Namaste! 🙏 Welcome to CET IIT Patna. I\'m your smart assistant!\n\nI can help you with:\n• 📋 Admissions & Eligibility\n• 📚 Programs (CSDA/AICS/BBA)\n• 💰 Fee Structure\n• 👨‍🏫 Faculty & Academics\n• 🏠 Hostel & Campus Life\n• 💼 Placements\n\nJust ask your question!'
+  },
+  {
+    keywords: ['admission','admit','dakhila','apply','registration','register','enroll','enrollment','join','form','kab','open','autumn','session','how to apply','kaise apply'],
+    reply: '🎓 <b>Admissions Open — Autumn 2026!</b>\n\n<b>Eligibility:</b> 10+2 with Min 60%\n<b>Accepted Scores:</b> JEE / CUET / BITSAT / SAT / IITP-SAT\n<b>Programs:</b> B.Sc CSDA, BS AICS, BS CSDA, BBA\n\n📝 <b>Apply Now:</b> <a href="https://registrations.iitp-cep.in" target="_blank">registrations.iitp-cep.in</a>\n\nOr fill our enquiry form at <a href="/admission">/admission</a> page!'
+  },
+  {
+    keywords: ['eligibility','eligible','qualification','yogyata','criteria','requirement','marks','percentage','12th','10+2','qualify','minimum'],
+    reply: '📋 <b>Eligibility Criteria:</b>\n\n<b>For CSDA & AICS:</b>\n• 10+2 Science stream with Min 60%\n• JEE/NEET/CUET/BITSAT/SAT or IITP-SAT score\n\n<b>For BBA:</b>\n• 10+2 any stream with Min 60%\n• Same entrance test options\n\n<b>Reservation:</b> As per Govt. of India norms\n<b>Age:</b> No upper age limit'
+  },
+  {
+    keywords: ['fee','fees','paisa','cost','price','kitna','charges','payment','scholarship','tuition','kharcha','money'],
+    reply: '💰 <b>Fee Structure:</b>\n\nFees vary by program and are set as per CET IIT Patna norms.\n\n📄 Check detailed fee breakdown on our <a href="/fees">Fee Structure page</a>\n\nIncludes:\n• Tuition Fee\n• Hostel & Mess Charges\n• Academic Service Charges\n• Examination Fee\n\n💡 Scholarships available for merit students!'
+  },
+  {
+    keywords: ['course','program','courses','programs','kya padhai','subject','branch','stream','degree','what courses','konsa'],
+    reply: '📚 <b>CET Programs (NEP 2020):</b>\n\n💻 <b>B.Sc (Hons.) CSDA</b> — 3 Years\nComputer Science & Data Analytics with AI/ML\n\n🛡️ <b>BS AI & Cyber Security</b> — 4 Years\nAI, ML, Ethical Hacking, Network Security\n\n📊 <b>BS CSDA</b> — 4 Years\nAdvanced CS, Big Data, Research\n\n💼 <b>BBA</b> — 3 Years\nMarketing, Finance, HR, Entrepreneurship\n\nAll programs have entry/exit/re-entry options!'
+  },
+  {
+    keywords: ['csda','computer science','data analytics','bsc','b.sc','cs'],
+    reply: '💻 <b>B.Sc (Hons.) Computer Science & Data Analytics</b>\n\n⏱️ Duration: 3 Years (Modular)\n📋 Entry: 10+2 Science, 60%+\n\n<b>Key Subjects:</b> Programming, Data Structures, AI/ML, Data Analytics, Databases, Cloud Computing\n\n<b>NEP Structure:</b>\n• Year 1 → Certificate\n• Year 2 → Diploma\n• Year 3 → Degree\n\nDesigned by IIT Patna faculty!'
+  },
+  {
+    keywords: ['aics','cyber','security','hacking','ethical','ai course','artificial intelligence'],
+    reply: '🛡️ <b>BS in AI & Cyber Security</b>\n\n⏱️ Duration: 4 Years (Modular)\n📋 Entry: 10+2 Science, 60%+\n\n<b>Key Subjects:</b> AI, Machine Learning, Cyber Security, Ethical Hacking, Network Security, Cryptography\n\n📥 Brochure: cet.iitp.ac.in/images/pdf/AICS.pdf\n\nOne of the most in-demand programs!'
+  },
+  {
+    keywords: ['bba','business','management','mba','commerce','marketing'],
+    reply: '💼 <b>Bachelor in Business Administration</b>\n\n⏱️ Duration: 3 Years (Modular)\n📋 Entry: 10+2 Any Stream, 60%+\n\n<b>Key Subjects:</b> Marketing, Finance, HR, Operations, Entrepreneurship, Business Analytics\n\nGuided by IIT Patna professors & industry experts from KPMG, EY!'
+  },
+  {
+    keywords: ['faculty','professor','teacher','sir','mam','madam','prof','instructor','who teaches','kon padhata'],
+    reply: '👨‍🏫 <b>Our Distinguished Faculty:</b>\n\n🏛️ <b>IIT Patna Professors</b> — Core academic faculty\n\n🌍 <b>Guest Faculty from:</b>\n• KPMG & EY (Industry)\n• Toronto Metropolitan University\n• Wayne State University\n• Kings College London\n• Nalanda University\n\nWorld-class education right here in Bihar!'
+  },
+  {
+    keywords: ['hostel','accommodation','mess','food','room','stay','reside','living','rehna','khana','canteen'],
+    reply: '🏠 <b>Hostel & Campus Life:</b>\n\n🛏️ Furnished rooms with bed & study table\n📶 High-speed WiFi throughout\n🔒 24/7 Security & CCTV\n🍽️ Hygienic nutritious meals in mess\n🏥 Medical facility on campus\n🏃 Sports & recreation facilities\n\nIIT Patna campus — Bihta, Bihar'
+  },
+  {
+    keywords: ['placement','job','salary','package','internship','career','naukri','recruit','company','hiring','placed'],
+    reply: '💼 <b>Placements & Career:</b>\n\n🏢 <b>Technology Club & Placement Cell</b> actively connects students with industry\n\n<b>Opportunities:</b>\n• Summer & Winter Internships\n• Campus Placement Drives\n• Industry Projects\n• Hackathons & Competitions\n\n📌 Check: cet.iitp.ac.in → Placement Cell\n\nAlso visit our <a href="/career">Career page</a>!'
+  },
+  {
+    keywords: ['exam','examination','test','pariksha','quiz','marks','result','grade','score','passing'],
+    reply: '📝 <b>Examination & Evaluation:</b>\n\n📊 <b>Marking Scheme:</b>\n• 20% — Class Test & Quiz\n• 30% — Regular Assignments\n• 50% — End Semester Exam (Proctored)\n\n🏆 ≥75% marks = <b>Degree with Distinction!</b>\n\n📅 Exam schedule: cet.iitp.ac.in → Academics'
+  },
+  {
+    keywords: ['moodle','portal','online','class','lms','learning','assignment','login portal','study material'],
+    reply: '📖 <b>Moodle Learning Portal:</b>\n\nMoodle is the official LMS for CET students.\n\n<b>Used for:</b>\n• Online Classes & Lectures\n• Assignment Submissions\n• Study Materials & Notes\n• Quiz & Assessments\n\n🔗 Access: cet.iitp.ac.in → Moodle Portal'
+  },
+  {
+    keywords: ['timetable','time table','schedule','class timing','kab class','routine','slot'],
+    reply: '🕐 <b>Class Timetable:</b>\n\nUpdated timetable for current session is available at:\n🔗 cet.iitp.ac.in → Academics → Time Table\n\nClasses are held Mon-Sat with regular breaks.'
+  },
+  {
+    keywords: ['calendar','academic calendar','session','semester','when start','kab shuru'],
+    reply: '📅 <b>Academic Calendar — Autumn 2026:</b>\n\nDownload the updated calendar at:\n🔗 cet.iitp.ac.in → Academics → Academic Calendar\n\nIncludes semester dates, exam schedules, holidays & events.'
+  },
+  {
+    keywords: ['holiday','chutti','vacation','break','leave','off day'],
+    reply: '🏖️ <b>Holiday List:</b>\n\nCET follows the IIT Patna holiday calendar.\n\n🔗 Check: cet.iitp.ac.in → Academics → Holiday List\n\nIncludes national holidays, festivals & semester breaks.'
+  },
+  {
+    keywords: ['nep','national education','2020','modular','credit','exit','entry'],
+    reply: '📘 <b>NEP 2020 Framework:</b>\n\nAll CET programs follow NEP 2020 modular structure:\n\n📜 Year 1 → <b>Certificate</b>\n📜 Year 2 → <b>Diploma</b>\n🎓 Year 3 → <b>Degree</b>\n🔬 Year 4 → <b>BS (Research)</b>\n\nStudents can exit & re-enter at any level with earned credits!'
+  },
+  {
+    keywords: ['jee','jee main','jee advanced','entrance','exam score'],
+    reply: '🎯 <b>JEE Score Holders:</b>\n\nJEE Main/Advanced score is accepted for:\n• B.Sc CSDA\n• BS AICS\n• BS CSDA\n\nOther accepted scores: CUET, BITSAT, SAT, NEET, IITP-SAT'
+  },
+  {
+    keywords: ['cuet','common university','central university'],
+    reply: '🎯 <b>CUET Score:</b>\n\nCUET score is accepted for ALL CET programs:\n• B.Sc CSDA ✅\n• BS AICS ✅\n• BS CSDA ✅\n• BBA ✅'
+  },
+  {
+    keywords: ['contact','phone','email','address','location','kahan','where','office','pata'],
+    reply: '📞 <b>Contact CET IIT Patna:</b>\n\n📍 Academic Section, Admin Block\n3rd Floor, Room No. 301\nIIT Patna, Bihta-801106\nBihar, India\n\n🌐 Website: cet.iitp.ac.in\n📝 Enquiry: Use our <a href="/admission">Admission page</a>'
+  },
+  {
+    keywords: ['bonafide','certificate','document','letter'],
+    reply: '📄 <b>Bonafide Certificate:</b>\n\nApply online at: cet.iitp.ac.in → Bonafide Application\n\nProcessed by the Academic Section.'
+  },
+  {
+    keywords: ['gymkhana','club','sports','activity','event','fest','cultural'],
+    reply: '🏅 <b>E-Gymkhana & Student Life:</b>\n\n• Student Clubs & Societies\n• Sports Tournaments\n• Cultural Events & Fests\n• Technical Competitions\n\n🔗 Visit: cet.iitp.ac.in → E-Gymkhana'
+  },
+  {
+    keywords: ['iit','patna','college','about','institute','campus','bihta'],
+    reply: '🏛️ <b>About CET IIT Patna:</b>\n\nCentre for Educational Technology (CET) is part of IIT Patna.\n\n📍 Located at Bihta-801106, Bihar\n🎓 Programs designed by IIT Patna Senate\n👨‍🏫 Faculty from IIT + global universities\n📘 NEP 2020 aligned curriculum\n\nLearn more on our <a href="/about">About page</a>!'
+  },
+  {
+    keywords: ['thank','thanks','dhanyawad','shukriya','okay','ok','got it','samajh','understood'],
+    reply: 'You\'re welcome! 😊 Feel free to ask anything else about CET IIT Patna. I\'m always here to help! 🙏'
+  },
+  {
+    keywords: ['bye','goodbye','alvida','see you','chal','chalo'],
+    reply: 'Goodbye! 👋 Best of luck with your journey at CET IIT Patna. Visit again anytime! 🎓'
+  },
+  {
+    keywords: ['help','madad','sahayata','kya kar sakte','what can you'],
+    reply: '🤖 <b>I can help with:</b>\n\n📋 Admissions & Eligibility\n📚 Programs (CSDA, AICS, BBA)\n💰 Fee Structure\n📝 Exams & Evaluation\n👨‍🏫 Faculty Information\n🏠 Hostel & Campus Life\n💼 Placements & Career\n📅 Timetable & Calendar\n📖 Moodle Portal\n📘 NEP 2020\n\nJust type your question!'
+  }
+];
 
 function sendChat() {
   const input = document.getElementById('chatInput');
@@ -213,16 +293,44 @@ function sendChat() {
   messages.innerHTML += `<div class="chat-msg user">${msg}</div>`;
   input.value = '';
 
-  let reply = "I'm not sure about that. Try asking about: admissions, eligibility, CSDA, AICS, BBA, Moodle, timetable, exams, fees, faculty, placements, NEP, or holidays! 😊";
-  const lower = msg.toLowerCase();
-  for (const [key, val] of Object.entries(chatResponses)) {
-    if (lower.includes(key)) { reply = val; break; }
+  // Smart matching: score each KB entry by keyword matches
+  const lower = msg.toLowerCase().replace(/[?!.,]/g, '');
+  let bestMatch = null;
+  let bestScore = 0;
+
+  for (const entry of chatKB) {
+    let score = 0;
+    for (const kw of entry.keywords) {
+      if (lower.includes(kw)) {
+        score += kw.length; // longer keyword matches = more specific = higher score
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestMatch = entry;
+    }
   }
 
+  let reply;
+  if (bestMatch && bestScore > 0) {
+    reply = bestMatch.reply;
+  } else {
+    reply = '🤔 I didn\'t quite get that. Try asking about:\n\n• <b>Admissions</b> — "How to apply?"\n• <b>Courses</b> — "What programs are available?"\n• <b>Fees</b> — "What is the fee structure?"\n• <b>Placements</b> — "Tell me about placements"\n• <b>Hostel</b> — "Hostel facilities?"\n• <b>Faculty</b> — "Who are the teachers?"\n\nOr type <b>"help"</b> to see everything I can do! 😊';
+  }
+
+  // Typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-msg bot';
+  typingDiv.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Typing...';
+  typingDiv.style.opacity = '0.6';
+  messages.appendChild(typingDiv);
+  messages.scrollTop = messages.scrollHeight;
+
   setTimeout(() => {
+    typingDiv.remove();
     messages.innerHTML += `<div class="chat-msg bot">${reply}</div>`;
     messages.scrollTop = messages.scrollHeight;
-  }, 500);
+  }, 600 + Math.random() * 400);
 }
 
 // ===== NAVBAR SCROLL EFFECT =====
